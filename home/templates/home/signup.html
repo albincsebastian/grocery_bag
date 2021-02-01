@@ -1,0 +1,248 @@
+{% extends 'home/master.html' %}    {% block body %}
+
+<html>
+
+  <head>
+      <!-- ajax -->
+     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <style>
+      html, body {
+      display: flex;
+      justify-content: center;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 15px;
+      }
+      form {
+      border: 5px solid #f1f1f1;
+      }
+      input[type=text], input[type=password] {
+      width: 100%;
+      padding: 16px 8px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      }
+      .icon {
+      font-size: 110px;
+      display: flex;
+      justify-content: center;
+      color: #4286f4;
+      }
+      button {
+      background-color: #4286f4;
+      color: white;
+      padding: 14px 0;
+      margin: 10px 0;
+      border: none;
+      cursor: grab;
+      width: 48%;
+      }
+      h1 {
+      text-align:center;
+      fone-size:18;
+      }
+      button:hover {
+      opacity: 0.8;
+      }
+      .formcontainer {
+      text-align: center;
+      margin: 24px 50px 12px;
+      }
+      .container {
+      padding: 16px 0;
+      text-align:left;
+      }
+      span.pwd {
+      float: right;
+      padding-top: 0;
+      padding-right: 15px;
+      }
+      span.cpwd {
+      float: right;
+      padding-top: 0;
+      padding-right: 15px;
+      }
+      .formDiv{
+      width:70%;
+    }
+      /* Change styles for span on extra small screens */
+      @media screen and (max-width: 700px) {
+      span.pwd {
+      display: block;
+      float: none;
+      }
+      span.cpwd {
+      display: block;
+      float: none;
+      }
+      .formDiv{
+        width:100%;
+      }
+    </style>
+  </head>
+  <body>
+  <div  style="width:100%"><br><br><br><br>
+    <form method="POST" id="form1">
+      {% csrf_token %}
+      <h1>SIGN UP</h1>
+      <div class="icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="formcontainer">
+      <div class="container">
+
+        <label for="name"><strong>Full Name</strong></label>
+        <input type="text" placeholder="Enter Full Name" name="name" id="name" maxlength="40" required>
+        <span id="name1"></span><br>
+
+        <label for="email"><strong>E-mail</strong></label>
+        <input type="text" placeholder="Enter E-mail" name="email" id="email" maxlength="40" required>
+        <span id="email1"></span><br>
+
+        <label for="pwd"><strong>Password</strong></label>
+        <input type="password" placeholder="Enter Password" name="pwd" id="pwd" maxlength="15" required>
+        <span id="pwd1"></span><br>
+
+        <label for="cpwd"><strong>Confirm Password</strong></label>
+        <input type="password" placeholder="Re-Enter Password" name="cpwd" id="cpwd" maxlength="15" required>
+        <span id="cpwd1"></span><br>
+
+      </div>
+      <button type="submit" id="fSubmit"><strong>SIGN UP</strong></button>
+
+        <marquee style="color:red"><b>Use E-mail and Password for login</b></marquee>
+
+    </form>
+  </div>
+  </body>
+</html>
+
+
+<script>
+
+        $(document).ready(function() {
+
+            $('#name').blur(function (e) {
+				if (validateName('name')) {
+					$('#name1').html('');
+
+				} else {
+				$('#name1').html('Invalid Name');
+				$('#name1').css('color', 'red');
+
+				}
+            });
+
+            $('#email').blur(function (e) {
+                if (IsEmail('email')) {
+                    $('#email1').html('');
+
+                } else {
+                    $('#email1').html('Invalid Email');
+                    $('#email1').css('color', 'red');
+
+                }
+            });
+
+            $('#pwd').blur(function (e) {
+				if ($('#pwd').val() !='') {
+					$('#pwd1').html('');
+				} else {
+				$('#pwd1').html('Enter Password');
+				$('#pwd1').css('color', 'red');
+				$('#cpwd1').html('');
+
+				}
+            });
+
+            $('#cpwd').blur(function (e) {
+				if ($('#cpwd').val() !='') {
+					$('#cpwd1').html('');
+				} else {
+				$('#cpwd1').html('Enter Confirm Password');
+				$('#cpwd1').css('color', 'red');
+
+				}
+            });
+
+        });
+
+    $("#fSubmit").click(function(e){
+
+        e.preventDefault();
+        var flag = 1;
+        if (IsEmail('email') == false) {
+                    $('#email1').html('Invalid Email');
+                    $('#email1').css('color', 'red');
+                    var flag = 0;
+                }
+         if (validateName('name')) {
+                    //
+                } else {
+                    $('#name1').html('Invalid Name');
+                    $('#name1').css('color', 'red');
+                    var flag = 0;
+
+                }
+        if($('#pwd').val()!=$('#cpwd').val())
+			   {
+				   $('#cpwd1').html('Password Missmatch');
+                   $('#cpwd1').css('color', 'red');
+				   flag=0;
+				}
+
+				$('#pwd').blur(function (e) {
+				  if ($('#pwd').val() !='') {
+					$('#pwd1').html('');
+				  } else {
+				  $('#pwd1').html('Enter Password');
+				  $('#pwd1').css('color', 'red');
+				  $('#cpwd1').html('');
+				  flag = 0;
+				}
+            });
+
+            $('#cpwd').blur(function (e) {
+				if ($('#cpwd').val() !='') {
+					$('#cpwd1').html('');
+				} else {
+				$('#cpwd1').html('Enter Confirm Password');
+				$('#cpwd1').css('color', 'red');
+				flag = 0;
+
+				}
+            });
+
+
+                if(flag==1)
+                {
+                    $('#form1').submit();
+                }
+
+    });
+
+    function validateName(name) {
+            var a = document.getElementById(name).value;
+            var filter = /[a-zA-Z ]+[a-zA-Z]$/;
+            if (filter.test(a)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function IsEmail(email) {
+            var a = document.getElementById(email).value;
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test(a)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+</script>
+
+
+{% endblock %}

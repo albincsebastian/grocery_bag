@@ -1,0 +1,76 @@
+{% extends 'user/master.html' %} {% block body %}{% load static %}
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View List</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'user/css/style.css' %}">
+    </head>
+    <body>
+        <div class="container mt-5">
+            <!-- top -->
+            <form method="post">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <br><br>
+                    <h1>View Grocery List</h1>
+                </div>
+                <div class="col-lg-6 float-right">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Date Filtering-->
+                            <input type="date" name="filterDate" class="form-control">
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="submit" class="btn btn-danger" value="filter">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+            <!-- // top -->
+            <!-- Grocery Cards -->
+            <div class="row mt-4">
+                <!--- -->
+                {% for i in items %}
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ i.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ i.qty }}</h6>
+                            {% if i.status == 0 %}
+                            <p class="text-info">PENDING</p>
+                            {% elif i.status == 1 %}
+                                <p class="text-success">BOUGHT</p>
+                            {% else %}
+                                <p class="text-danger">NOT AVAILABLE</p>
+                            {% endif %}
+
+                            <a href="/user/update/{{ i.itemId }}/">Update</a>&emsp;&emsp;<a href="/user/delete/{{ i.itemId }}/" onclick="return confirm1();">Delete</a>
+                             </div>
+                      </div>
+                    <br>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </body>
+</html>
+
+<script>
+    function confirm1(){
+        val = confirm("Do you want to delete the item?");
+        if (val==false){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+</script>
+
+
+{% endblock %}
